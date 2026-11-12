@@ -1,8 +1,8 @@
 export class HttpError extends Error {
   public status: number;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(status: number) {
-    super();
-    throw new Error("Not implemented");
+    super(`HTTP error: ${status}`);
+    this.name = "HttpError";
+    this.status = status;
   }
 }
