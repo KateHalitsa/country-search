@@ -1,11 +1,20 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function debounce<Args extends unknown[]>(
   fn: (...args: Args) => void,
   delay: number,
 ): (...args: Args) => void {
-  notImplemented();
-  return () => {};
+  let timerId: number | null = null;
+
+  return function (...args) {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+
+    timerId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
 }
+
 export function notImplemented() {
   throw new Error("Функция не реализована");
 }
