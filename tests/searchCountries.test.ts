@@ -19,7 +19,7 @@ describe("searchCountries", () => {
     expect(fetchSpy).toHaveBeenCalledWith(
       "https://countries.dev/name/Bel",
       expect.objectContaining({
-        signal: controller.signal,
+        signal: expect.any(AbortSignal),
       }),
     );
     expect(res).toHaveLength(3);
@@ -76,6 +76,36 @@ describe("searchCountries", () => {
 
     await expect(promise).rejects.toMatchObject({
       name: "AbortError",
+    });
+  });
+  it("throws TimeoutError when request times out", async () => {
+    const timeoutController = new AbortController();
+
+    const timeoutSpy = vi
+      .spyOn(AbortSignal, "timeout")
+      .mockReturnValue(timeoutController.signal);
+
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(
+      (_url, options) =>
+        new Promise((_, reject) => {
+          options?.signal?.addEventListener("abort", () => {
+            reject(options.signal?.reason);
+          });
+        }),
+    );
+
+    const controller = new AbortController();
+    const promise = searchCountries("Bel", controller.signal);
+
+    expect(timeoutSpy).toHaveBeenCalledWith(expect.any(Number));
+    expect(fetchSpy).toHaveBeenCalled();
+
+    timeoutController.abort(
+      new DOMException("The operation timed out", "TimeoutError"),
+    );
+
+    await expect(promise).rejects.toMatchObject({
+      name: "TimeoutError",
     });
   });
 });
