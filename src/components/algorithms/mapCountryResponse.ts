@@ -1,7 +1,12 @@
 import { Country, CountryCard } from "../../types/types";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function mapCountryResponse(raw: Country): CountryCard {
-  throw new Error("Not implemented");
-  return {} as CountryCard;
+  return {
+    name: raw.name,
+    flag: raw.flags.png,
+    capital: raw.capital || "No capital",
+    region: raw.region,
+    population: raw.population,
+    languages: raw.languages.map((language) => language.name) ?? [],
+  };
 }

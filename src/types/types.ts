@@ -46,5 +46,5 @@ export type CountryCard = {
   capital: string;
   region: string;
   population: number;
-  languages: Languages[];
+  languages: string[];
 };
