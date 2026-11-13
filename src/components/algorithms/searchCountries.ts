@@ -6,8 +6,10 @@ export async function searchCountries(
   signal: AbortSignal,
 ): Promise<Country[]> {
   const url = `https://countries.dev/name/${encodeURIComponent(query)}`;
+  const timeoutSignal = AbortSignal.timeout(5000);
+  const combinedSignal = AbortSignal.any([signal, timeoutSignal]);
 
-  const response = await fetch(url, { signal });
+  const response = await fetch(url, { signal: combinedSignal });
 
   if (response.status === 404) {
     return [];
