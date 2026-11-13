@@ -10,7 +10,7 @@ export type Country = {
   };
   latlng: number[];
   region: string;
-  borders: string[];
+  borders?: string[];
   capital: string;
   demonym: string;
   languages: Languages[];
@@ -21,9 +21,9 @@ export type Country = {
   currencies: Currencies[];
   nativeName: string;
   population: number;
-  independent: true;
-  numericCode: number;
-  callingCodes: number[];
+  independent: boolean;
+  numericCode: string;
+  callingCodes: string[];
   topLevelDomain: string[];
   populationDensity: number;
 };
@@ -38,4 +38,13 @@ export type Currencies = {
   code: string;
   name: string;
   symbol: string;
+};
+
+export type CountryCard = {
+  name: string;
+  flag: string;
+  capital: string;
+  region: string;
+  population: number;
+  languages: Languages[];
 };
