@@ -1,5 +1,17 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { HttpError } from "./HttpError";
+
 export function handleSearchError(error: unknown) {
-  throw new Error("Not implemented");
-  return "";
+  if (error instanceof Error && error.name === "AbortError") {
+    return null;
+  }
+
+  if (error instanceof Error && error.name === "TimeoutError") {
+    return "The waiting time has expired. Please try again.";
+  }
+
+  if (error instanceof HttpError) {
+    return `Server error: HTTP ${error.status}`;
+  }
+
+  return "Unable to connect. Please check your internet connection.";
 }
